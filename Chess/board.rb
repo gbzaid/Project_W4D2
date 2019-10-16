@@ -1,5 +1,8 @@
 require_relative "piece.rb"
+require_relative "bishop.rb"
+require_relative "rook.rb"
 require_relative "nullpiece"
+require_relative "king.rb"
 require "byebug"
 
 class Board
@@ -8,12 +11,10 @@ class Board
         @board = Array.new(8) {Array.new(8, NullPiece.instance)}
         self.board.each_with_index do |row, i|
             if i == 0 || i == 1 || i == 6 || i == 7
-                #self.board[i] = Array.new(8, Piece.new)
                 self.board[i].each_with_index do |square, j|
-                    self.board[i][j] = Piece.new
+                    self.board[i][j] = Piece.new("white", self, [i,j])
                 end
-            end
-            
+            end 
         end 
     end
 
@@ -35,13 +36,9 @@ class Board
     end
 
     def [](pos)
-        #debugger
-        row,col = pos # pos = [1,0]
+        row,col = pos
         self.board[row][col]
     end
-
-    
-
 
     def []=(pos, piece)
         row,col = pos
@@ -50,4 +47,11 @@ class Board
 
     class BadPosition < StandardError
     end 
-end 
+end
+
+
+if $PROGRAM_NAME == __FILE__
+    game = Board.new
+    game[[3,2]] = King.new("white", game, [3,2])
+    p game[[3,2]].moves
+end
