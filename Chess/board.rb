@@ -1,10 +1,11 @@
 require_relative "piece.rb"
+require_relative "nullpiece"
 require "byebug"
 
 class Board
     attr_accessor :board
     def initialize
-        @board = Array.new(8) {Array.new(8, nil)}
+        @board = Array.new(8) {Array.new(8, NullPiece.instance)}
         self.board.each_with_index do |row, i|
             if i == 0 || i == 1 || i == 6 || i == 7
                 #self.board[i] = Array.new(8, Piece.new)
@@ -21,13 +22,14 @@ class Board
         # 1)there is no piece at start_pos or
         # 2)the piece cannot move to end_pos.
         #debugger
-        if self.board[start_pos].nil?
+        if self[start_pos].nil?
             raise BadPosition.new("This spot is empty.")        
-        elsif !self.board[end_pos].nil?
+        elsif !self[end_pos].nil?
             raise BadPosition.new("This spot is occupied.")
         else
-            self.board[end_pos] = self.board[start_pos]
-            self.board[start_pos].delete
+            self[end_pos] = self[start_pos]
+            self[start_pos] = NullPiece.instance
+            
         end 
         
     end
